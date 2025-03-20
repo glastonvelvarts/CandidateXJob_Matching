@@ -1,0 +1,290 @@
+{
+    "_id": {
+      "$oid": "644ce07a78e8fc84119ab12f"
+    },
+    "fName": "RIdwan",
+    "lName": "Surajudeen ",
+    "email": "surajudeen.ridwan.a@yopmail.com",
+    "number": "8130039455",
+    "password": "$2a$10$s/YMN1yOWM1rYE/F44sZDOlfgOFyxOGQliJ8/76VBGqkSksKlmBhO",
+    "userImage": "https://olibr.s3.ap-south-1.amazonaws.com/assets/dummy.png",
+    "socialId": "",
+    "region": "IN",
+    "module": [],
+    "loginType": "Web",
+    "userType": "Developer",
+    "status": "Active",
+    "verifyUser": {
+      "VerifyCode": "",
+      "verifyType": "",
+      "verifySource": "",
+      "verifyAt": {
+        "$date": "2023-04-29T09:16:42.806Z"
+      }
+    },
+    "about": "",
+    "spotLight": false,
+    "registrationDate": {
+      "$date": "2022-10-07T10:52:54.458Z"
+    },
+    "devAddress": "rotimi deola street",
+    "devAddress2": "",
+    "devDesg": "Software Engineer",
+    "devCSalar": "10.5",
+    "devESalary": "12.5",
+    "devNoticePeriod": "7 Days",
+    "devAvlFrom": "",
+    "devTellUrStory": "",
+    "devResume": "https://olibr.s3.ap-south-1.amazonaws.com/resume/de3bf6ebe33848101668622418304.pdf",
+    "devCity": "Churk",
+    "devPinCode": "23401",
+    "devState": "UP",
+    "devCountryCode": "91",
+    "devStatus": "initial",
+    "devTimeZone": "Overlapping Hours",
+    "devStepCompleted": 1,
+    "emailDirectVerifiedBy": "",
+    "profileDirectApprovedBy": "",
+    "engTestDirectClearedBy": "",
+    "skillTestDirectClearedBy": "",
+    "devAcademic": [
+      {
+        "institution": "University of Ilorin",
+        "specialization": "MSc.",
+        "startDate": "",
+        "endDate": "",
+        "_id": {
+          "$oid": "63a28d4323d3add2fd5fd7d7"
+        }
+      },
+      {
+        "institution": "University of Ilorin",
+        "specialization": "BSc.",
+        "startDate": "",
+        "endDate": "",
+        "_id": {
+          "$oid": "63a28d4323d3add2fd5fd7d9"
+        }
+      }
+    ],
+    "devTools": [
+      {
+        "toolName": "",
+        "toolExp": "",
+        "toolIcon": "",
+        "_id": {
+          "$oid": "63a2a2d36381e598aad544b4"
+        }
+      }
+    ],
+    "devEmployment": [
+      {
+        "designation": "Full Stack Developer",
+        "companyName": "",
+        "from": "2021-01-01",
+        "to": "2022-11-16",
+        "stillWorking": true,
+        "techUsed": [],
+        "toolUsed": [],
+        "aboutRole": "Developed a website's layout using Reactjs, Angular and React native.\nEnvisioned a revolutionary new strategy using UX and UI techniques\nCollaborated to create strategic initiaticves to design, code, and test\nsolutions.\nEffectively coded software changes and alterations based on specific\ndesign specifications.\nAnalyzed and designed new systems and appications.",
+        "uniKey": "POS-1",
+        "_id": {
+          "$oid": "63a293a023d3add2fd5febf7"
+        }
+      },
+      {
+        "designation": "Frontend Developer",
+        "companyName": "Bools Technology",
+        "from": "2017-01-01",
+        "to": "2019-12-31",
+        "stillWorking": false,
+        "techUsed": [],
+        "toolUsed": [],
+        "aboutRole": "Writing well designed, testable, efficient code by using best software\ndevelopment practices.\nCreating website layout/user interfaces by using standard HTML.\nJavascript and CSS with little of Reacts, React native and Angularjs.\nIntegrate data from various back-end services and databases.\nCreate and maintain software documentation.\n\nCooperate with web designers to match visual design intent.\nWorked to meet client deadlines.\nHelped to achieve a consistent look and visual theme across the website by promoting uniform fonts, formatting, images, and layout.",
+        "uniKey": "POS-3",
+        "_id": {
+          "$oid": "63a293a023d3add2fd5febfb"
+        }
+      },
+      {
+        "designation": "",
+        "companyName": "",
+        "from": "",
+        "to": "",
+        "stillWorking": false,
+        "techUsed": [],
+        "toolUsed": [],
+        "aboutRole": "",
+        "uniKey": "",
+        "_id": {
+          "$oid": "63a293a023d3add2fd5febf5"
+        }
+      },
+      {
+        "designation": "Full Stack Developer",
+        "companyName": "Archs Solutions Technology",
+        "from": "2019-01-01",
+        "to": "2021-12-31",
+        "stillWorking": false,
+        "techUsed": [],
+        "toolUsed": [],
+        "aboutRole": "Met or exceeded the daily call goals and striving to achieve\nexcellent customer satisfaction. • Participated in the planning and execution of 10+ business continuity/disaster recovery exercises.\nAnalyzed systems flow, data usage, and work processes investigated\n100% of problem areas. Documented 100% of technical\nspecifications and dependencies of applications. Designed,\ndeveloped, and modified numerous software systems and custom\ncomponents. Developed tens new software solutions by analyzing\nsystem performance standards.",
+        "uniKey": "POS-2",
+        "_id": {
+          "$oid": "63a293a023d3add2fd5febf9"
+        }
+      }
+    ],
+    "devCertificates": [
+      {
+        "certificateName": "",
+        "certInstitution": "",
+        "startDate": "",
+        "endDate": "",
+        "_id": {
+          "$oid": "63a2905123d3add2fd5fe12a"
+        }
+      }
+    ],
+    "devSkills": [],
+    "devSocialProfile": {
+      "gitHub": "",
+      "linkedin": "",
+      "facebook": "",
+      "twitter": ""
+    },
+    "resumeParseData": "{\"ContactInformation\":{\"Telephones\":[{\"Raw\":\"+2348130039455\",\"Normalized\":\"+234 8130039455\",\"InternationalCountryCode\":\"234\",\"SubscriberNumber\":\"8130039455\"}],\"EmailAddresses\":[\"surajudeen.ridwan.a@gmail.com\"],\"Location\":{\"CountryCode\":\"NG\",\"Municipality\":\"Lagos\",\"StreetAddressLines\":[\"3, Rotimi Adeola Street, Owutu-Agric, Ikorodu\"]}},\"Education\":{\"HighestDegree\":{\"Name\":{\"Raw\":\"MSc.\",\"Normalized\":\"MSc\"},\"Type\":\"masters\"},\"EducationDetails\":[{\"Id\":\"DEG-2\",\"Text\":\"2021\\n\\nMSc. Geology\\nUniversity of Ilorin,\",\"SchoolName\":{\"Raw\":\"University of Ilorin\",\"Normalized\":\"University of Ilorin\"},\"SchoolType\":\"university\",\"Degree\":{\"Name\":{\"Raw\":\"MSc.\",\"Normalized\":\"MSc\"},\"Type\":\"masters\"},\"Majors\":[\"Geology\"],\"LastEducationDate\":{\"Date\":\"2021-01-01\",\"IsCurrentDate\":false,\"FoundYear\":true,\"FoundMonth\":false,\"FoundDay\":false}},{\"Id\":\"DEG-1\",\"Text\":\"2016\\nBSc. Geology\\nUniversity of Ilorin\",\"SchoolName\":{\"Raw\":\"University of Ilorin\",\"Normalized\":\"University of Ilorin\"},\"SchoolType\":\"university\",\"Degree\":{\"Name\":{\"Raw\":\"BSc.\",\"Normalized\":\"BSc\"},\"Type\":\"bachelors\"},\"Majors\":[\"Geology\"],\"LastEducationDate\":{\"Date\":\"2016-01-01\",\"IsCurrentDate\":false,\"FoundYear\":true,\"FoundMonth\":false,\"FoundDay\":false}}]},\"EmploymentHistory\":{\"ExperienceSummary\":{\"Description\":\"The candidate is experienced in:  Information Technology (Programming; Internet; Privacy and Data Security). The candidate has 6 years of work experience.\",\"MonthsOfWorkExperience\":71,\"MonthsOfManagementExperience\":0,\"ExecutiveType\":\"NONE\",\"AverageMonthsPerEmployer\":23,\"FulltimeDirectHirePredictiveIndex\":50,\"ManagementStory\":\"\",\"CurrentManagementLevel\":\"\",\"ManagementScore\":0},\"Positions\":[{\"Id\":\"POS-1\",\"Employer\":{\"Location\":{\"CountryCode\":\"NG\",\"Municipality\":\"Lagos\"}},\"IsSelfEmployed\":false,\"IsCurrent\":true,\"JobTitle\":{\"Raw\":\"Full-Stack Developer\",\"Normalized\":\"Full Stack Developer\",\"Probability\":\"Confident\"},\"StartDate\":{\"Date\":\"2021-01-01\",\"IsCurrentDate\":false,\"FoundYear\":true,\"FoundMonth\":false,\"FoundDay\":false},\"EndDate\":{\"Date\":\"2022-11-16\",\"IsCurrentDate\":true,\"FoundYear\":true,\"FoundMonth\":true,\"FoundDay\":false},\"JobType\":\"directHire\",\"TaxonomyName\":\"Information Technology\",\"SubTaxonomyName\":\"Programming\",\"JobLevel\":\"Entry Level\",\"TaxonomyPercentage\":78,\"Description\":\"Developed a website's layout using Reactjs, Angular and React native.\\nEnvisioned a revolutionary new strategy using UX and UI techniques\\nCollaborated to create strategic initiaticves to design, code, and test\\nsolutions.\\nEffectively coded software changes and alterations based on specific\\ndesign specifications.\\nAnalyzed and designed new systems and appications.\"},{\"Id\":\"POS-2\",\"Employer\":{\"Name\":{\"Probability\":\"Confident\",\"Raw\":\"Archs Solutions Technology\",\"Normalized\":\"Archs Solutions Technology\"},\"Location\":{\"CountryCode\":\"NG\",\"Municipality\":\"Lagos\"}},\"IsSelfEmployed\":false,\"IsCurrent\":false,\"JobTitle\":{\"Raw\":\"Full-Stack Developer\",\"Normalized\":\"Full Stack Developer\",\"Probability\":\"Confident\"},\"StartDate\":{\"Date\":\"2019-01-01\",\"IsCurrentDate\":false,\"FoundYear\":true,\"FoundMonth\":false,\"FoundDay\":false},\"EndDate\":{\"Date\":\"2021-12-31\",\"IsCurrentDate\":false,\"FoundYear\":true,\"FoundMonth\":false,\"FoundDay\":false},\"JobType\":\"directHire\",\"TaxonomyName\":\"Information Technology\",\"SubTaxonomyName\":\"Privacy and Data Security\",\"JobLevel\":\"Experienced (non-manager)\",\"TaxonomyPercentage\":100,\"Description\":\"Met or exceeded the daily call goals and striving to achieve\\nexcellent customer satisfaction. • Participated in the planning and execution of 10+ business continuity/disaster recovery exercises.\\nAnalyzed systems flow, data usage, and work processes investigated\\n100% of problem areas. Documented 100% of technical\\nspecifications and dependencies of applications. Designed,\\ndeveloped, and modified numerous software systems and custom\\ncomponents. Developed tens new software solutions by analyzing\\nsystem performance standards.\"},{\"Id\":\"POS-3\",\"Employer\":{\"Name\":{\"Probability\":\"Confident\",\"Raw\":\"Bools Technology\",\"Normalized\":\"Bools Technology\"},\"Location\":{\"CountryCode\":\"NG\",\"Municipality\":\"Lagos\"}},\"IsSelfEmployed\":false,\"IsCurrent\":false,\"JobTitle\":{\"Raw\":\"Frontend Developer\",\"Normalized\":\"Frontend Developer\",\"Probability\":\"Confident\"},\"StartDate\":{\"Date\":\"2017-01-01\",\"IsCurrentDate\":false,\"FoundYear\":true,\"FoundMonth\":false,\"FoundDay\":false},\"EndDate\":{\"Date\":\"2019-12-31\",\"IsCurrentDate\":false,\"FoundYear\":true,\"FoundMonth\":false,\"FoundDay\":false},\"JobType\":\"directHire\",\"TaxonomyName\":\"Information Technology\",\"SubTaxonomyName\":\"Programming\",\"JobLevel\":\"Entry Level\",\"TaxonomyPercentage\":75,\"Description\":\"Writing well designed, testable, efficient code by using best software\\ndevelopment practices.\\nCreating website layout/user interfaces by using standard HTML.\\nJavascript and CSS with little of Reacts, React native and Angularjs.\\nIntegrate data from various back-end services and databases.\\nCreate and maintain software documentation.\\n\\nCooperate with web designers to match visual design intent.\\nWorked to meet client deadlines.\\nHelped to achieve a consistent look and visual theme across the website by promoting uniform fonts, formatting, images, and layout.\"}]},\"SkillsData\":[{\"Root\":\"Sovren\",\"Taxonomies\":[{\"Id\":\"10\",\"Name\":\"Information Technology\",\"PercentOfOverall\":83,\"SubTaxonomies\":[{\"SubTaxonomyId\":\"204\",\"SubTaxonomyName\":\"Programming\",\"PercentOfOverall\":35,\"PercentOfParent\":42,\"Skills\":[{\"Id\":\"016186\",\"Name\":\"Embedded Systems\",\"FoundIn\":[{\"SectionType\":\"SKILLS\"}],\"ExistsInText\":true},{\"Id\":\"025394\",\"Name\":\"Javascript\",\"FoundIn\":[{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-3\"}],\"ExistsInText\":true,\"MonthsExperience\":{\"Value\":36},\"LastUsed\":{\"Value\":\"2019-12-31\"}},{\"Id\":\"339002002\",\"Name\":\"Node.JS\",\"ExistsInText\":false,\"Variations\":[{\"Id\":\"555154583\",\"Name\":\"NodeJS\",\"FoundIn\":[{\"SectionType\":\"SKILLS\"}],\"ExistsInText\":true}]},{\"Id\":\"3391100\",\"Name\":\"Reactjs\",\"FoundIn\":[{\"SectionType\":\"SKILLS\"},{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-1\"}],\"ExistsInText\":true,\"Variations\":[{\"Id\":\"33911001\",\"Name\":\"React\",\"FoundIn\":[{\"SectionType\":\"SKILLS\"},{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-1\"},{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-3\"}],\"ExistsInText\":true,\"MonthsExperience\":{\"Value\":59},\"LastUsed\":{\"Value\":\"2022-11-16\"}}],\"MonthsExperience\":{\"Value\":59},\"LastUsed\":{\"Value\":\"2022-11-16\"},\"ChildrenMonthsExperience\":{\"Value\":59},\"ChildrenLastUsed\":{\"Value\":\"2022-11-16\"}}]},{\"SubTaxonomyId\":\"196\",\"SubTaxonomyName\":\"Internet\",\"PercentOfOverall\":17,\"PercentOfParent\":20,\"Skills\":[{\"Id\":\"014705\",\"Name\":\"CSS\",\"FoundIn\":[{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-3\"}],\"ExistsInText\":true,\"MonthsExperience\":{\"Value\":36},\"LastUsed\":{\"Value\":\"2019-12-31\"}},{\"Id\":\"019115\",\"Name\":\"HTML\",\"FoundIn\":[{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-3\"}],\"ExistsInText\":true,\"MonthsExperience\":{\"Value\":36},\"LastUsed\":{\"Value\":\"2019-12-31\"}}]},{\"SubTaxonomyId\":\"556\",\"SubTaxonomyName\":\"Privacy and Data Security\",\"PercentOfOverall\":13,\"PercentOfParent\":15,\"Skills\":[{\"Id\":\"5551264\",\"Name\":\"Business Continuity\",\"FoundIn\":[{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-2\"}],\"ExistsInText\":true,\"MonthsExperience\":{\"Value\":36},\"LastUsed\":{\"Value\":\"2021-12-31\"}},{\"Id\":\"5551236\",\"Name\":\"Disaster Recovery\",\"FoundIn\":[{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-2\"}],\"ExistsInText\":true,\"MonthsExperience\":{\"Value\":36},\"LastUsed\":{\"Value\":\"2021-12-31\"}}]},{\"SubTaxonomyId\":\"552\",\"SubTaxonomyName\":\"Mobile Applications\",\"PercentOfOverall\":8,\"PercentOfParent\":10,\"Skills\":[{\"Id\":\"5520505\",\"Name\":\"Angularjs\",\"FoundIn\":[{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-3\"}],\"ExistsInText\":true,\"MonthsExperience\":{\"Value\":36},\"LastUsed\":{\"Value\":\"2019-12-31\"}}]},{\"SubTaxonomyId\":\"731\",\"SubTaxonomyName\":\"User Interface\",\"PercentOfOverall\":5,\"PercentOfParent\":7,\"Skills\":[{\"Id\":\"7310067\",\"Name\":\"User Interface\",\"FoundIn\":[{\"SectionType\":\"SKILLS\"}],\"ExistsInText\":true,\"Variations\":[{\"Id\":\"7310068\",\"Name\":\"UI\",\"FoundIn\":[{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-1\"}],\"ExistsInText\":true,\"MonthsExperience\":{\"Value\":23},\"LastUsed\":{\"Value\":\"2022-11-16\"}}],\"MonthsExperience\":{\"Value\":23},\"LastUsed\":{\"Value\":\"2022-11-16\"},\"ChildrenMonthsExperience\":{\"Value\":23},\"ChildrenLastUsed\":{\"Value\":\"2022-11-16\"}}]},{\"SubTaxonomyId\":\"338\",\"SubTaxonomyName\":\"Security\",\"PercentOfOverall\":4,\"PercentOfParent\":5,\"Skills\":[{\"Id\":\"015370\",\"Name\":\"Disaster Recovery\",\"FoundIn\":[{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-2\"}],\"ExistsInText\":true,\"MonthsExperience\":{\"Value\":36},\"LastUsed\":{\"Value\":\"2021-12-31\"}}]},{\"SubTaxonomyId\":\"193\",\"SubTaxonomyName\":\"Database\",\"PercentOfOverall\":0,\"PercentOfParent\":0,\"Skills\":[{\"Id\":\"003243\",\"Name\":\"Mysql\",\"FoundIn\":[{\"SectionType\":\"SKILLS\"}],\"ExistsInText\":true}]},{\"SubTaxonomyId\":\"553\",\"SubTaxonomyName\":\"Big Data\",\"PercentOfOverall\":0,\"PercentOfParent\":0,\"Skills\":[{\"Id\":\"5530805\",\"Name\":\"Mongodb\",\"FoundIn\":[{\"SectionType\":\"SKILLS\"}],\"ExistsInText\":true}]},{\"SubTaxonomyId\":\"550\",\"SubTaxonomyName\":\"Cloud Computing\",\"PercentOfOverall\":0,\"PercentOfParent\":0,\"Skills\":[{\"Id\":\"5500361\",\"Name\":\"Mongodb\",\"FoundIn\":[{\"SectionType\":\"SKILLS\"}],\"ExistsInText\":true}]}]},{\"Id\":\"93\",\"Name\":\"User Experience\",\"PercentOfOverall\":12,\"SubTaxonomies\":[{\"SubTaxonomyId\":\"573\",\"SubTaxonomyName\":\"Product Design\",\"PercentOfOverall\":7,\"PercentOfParent\":55,\"Skills\":[{\"Id\":\"5570161\",\"Name\":\"User Experience Design\",\"ExistsInText\":false,\"Variations\":[{\"Id\":\"55701622\",\"Name\":\"UX\",\"FoundIn\":[{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-1\"}],\"ExistsInText\":true,\"MonthsExperience\":{\"Value\":23},\"LastUsed\":{\"Value\":\"2022-11-16\"}}],\"MonthsExperience\":{\"Value\":23},\"LastUsed\":{\"Value\":\"2022-11-16\"},\"ChildrenMonthsExperience\":{\"Value\":23},\"ChildrenLastUsed\":{\"Value\":\"2022-11-16\"}},{\"Id\":\"5570164\",\"Name\":\"Visual Design\",\"FoundIn\":[{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-3\"}],\"ExistsInText\":true,\"MonthsExperience\":{\"Value\":36},\"LastUsed\":{\"Value\":\"2019-12-31\"}}]},{\"SubTaxonomyId\":\"565\",\"SubTaxonomyName\":\"Visual Design\",\"PercentOfOverall\":1,\"PercentOfParent\":11,\"Skills\":[{\"Id\":\"5570243\",\"Name\":\"Visual Design\",\"FoundIn\":[{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-3\"}],\"ExistsInText\":true,\"MonthsExperience\":{\"Value\":36},\"LastUsed\":{\"Value\":\"2019-12-31\"}}]},{\"SubTaxonomyId\":\"564\",\"SubTaxonomyName\":\"Motion Design\",\"PercentOfOverall\":1,\"PercentOfParent\":11,\"Skills\":[{\"Id\":\"5570065\",\"Name\":\"Visual Design\",\"FoundIn\":[{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-3\"}],\"ExistsInText\":true,\"MonthsExperience\":{\"Value\":36},\"LastUsed\":{\"Value\":\"2019-12-31\"}}]},{\"SubTaxonomyId\":\"562\",\"SubTaxonomyName\":\"Interaction Design\",\"PercentOfOverall\":1,\"PercentOfParent\":11,\"Skills\":[{\"Id\":\"5570047\",\"Name\":\"Visual Design\",\"FoundIn\":[{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-3\"}],\"ExistsInText\":true,\"MonthsExperience\":{\"Value\":36},\"LastUsed\":{\"Value\":\"2019-12-31\"}}]},{\"SubTaxonomyId\":\"560\",\"SubTaxonomyName\":\"UX Design\",\"PercentOfOverall\":1,\"PercentOfParent\":11,\"Skills\":[{\"Id\":\"5570022\",\"Name\":\"Visual Design\",\"FoundIn\":[{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-3\"}],\"ExistsInText\":true,\"MonthsExperience\":{\"Value\":36},\"LastUsed\":{\"Value\":\"2019-12-31\"}}]}]},{\"Id\":\"5\",\"Name\":\"Engineering\",\"PercentOfOverall\":3,\"SubTaxonomies\":[{\"SubTaxonomyId\":\"136\",\"SubTaxonomyName\":\"Environmental\",\"PercentOfOverall\":3,\"PercentOfParent\":96,\"Skills\":[{\"Id\":\"022865\",\"Name\":\"Geology\",\"FoundIn\":[{\"SectionType\":\"EDUCATION\",\"Id\":\"DEG-1\"},{\"SectionType\":\"EDUCATION\",\"Id\":\"DEG-2\"}],\"ExistsInText\":true,\"LastUsed\":{\"Value\":\"2021-01-01\"}}]},{\"SubTaxonomyId\":\"144\",\"SubTaxonomyName\":\"Computer Hardware\",\"PercentOfOverall\":0,\"PercentOfParent\":4,\"Skills\":[{\"Id\":\"022944\",\"Name\":\"Embedded Systems\",\"FoundIn\":[{\"SectionType\":\"SKILLS\"}],\"ExistsInText\":true}]}]},{\"Id\":\"31\",\"Name\":\"Written Communications\",\"PercentOfOverall\":1,\"SubTaxonomies\":[{\"SubTaxonomyId\":\"429\",\"SubTaxonomyName\":\"Specs and Documentation\",\"PercentOfOverall\":1,\"PercentOfParent\":100,\"Skills\":[{\"Id\":\"008216\",\"Name\":\"Software Documentation\",\"FoundIn\":[{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-3\"}],\"ExistsInText\":true,\"MonthsExperience\":{\"Value\":36},\"LastUsed\":{\"Value\":\"2019-12-31\"}}]}]},{\"Id\":\"14\",\"Name\":\"Marketing\",\"PercentOfOverall\":0,\"SubTaxonomies\":[{\"SubTaxonomyId\":\"599\",\"SubTaxonomyName\":\"Digital\",\"PercentOfOverall\":0,\"PercentOfParent\":100,\"Skills\":[{\"Id\":\"1400245\",\"Name\":\"User Interface\",\"FoundIn\":[{\"SectionType\":\"SKILLS\"}],\"ExistsInText\":true},{\"Id\":\"1400247\",\"Name\":\"Visual Design\",\"FoundIn\":[{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-3\"}],\"ExistsInText\":true,\"MonthsExperience\":{\"Value\":36},\"LastUsed\":{\"Value\":\"2019-12-31\"}}]}]},{\"Id\":\"72\",\"Name\":\"Installation, Maintenance, Repair\",\"PercentOfOverall\":0,\"SubTaxonomies\":[{\"SubTaxonomyId\":\"452\",\"SubTaxonomyName\":\"General Repair\",\"PercentOfOverall\":0,\"PercentOfParent\":100,\"Skills\":[{\"Id\":\"022117\",\"Name\":\"Maintenance\",\"FoundIn\":[{\"SectionType\":\"SKILLS\"}],\"ExistsInText\":true}]}]},{\"Id\":\"13\",\"Name\":\"Manufacturing\",\"PercentOfOverall\":0,\"SubTaxonomies\":[{\"SubTaxonomyId\":\"364\",\"SubTaxonomyName\":\"Equipment\",\"PercentOfOverall\":0,\"PercentOfParent\":100,\"Skills\":[{\"Id\":\"022116\",\"Name\":\"Maintenance\",\"FoundIn\":[{\"SectionType\":\"SKILLS\"}],\"ExistsInText\":true}]}]}]}],\"LanguageCompetencies\":[{\"Language\":\"English\",\"LanguageCode\":\"en\",\"FoundInContext\":\"English\"}],\"QualificationsSummary\":\"Expertise\\n\\nReactjs\\n\\nReact Native\\nAngular\\n\\nNodejs\\n\\nMongoDb\\n\\nMySql\\n\\n\\nLanguage\\n\\n\\nEnglish\\nSurajudeen Ridwan\\nSoftware Developer\\nExperienced Web Developer adept in all stages of advanced web development.\\nProficient izvarious platforms, languages, and embedded systems. Able to\\neffectively self-manage during independent projects, as well as collaborate as\\npart of a productive team. Knowledgeable in user interface, testing, and\\ndebugging processes. Bringing forth expertise in design, installation, testing and\\nmaintenance of web systems. Equipped with a diverse and promising skill-set.\\nProficient in an assortment of technologies,\",\"ResumeMetadata\":{\"FoundSections\":[{\"FirstLineNumber\":0,\"LastLineNumber\":10,\"SectionType\":\"CONTACT INFO\",\"HeaderTextFound\":\"Contact\"},{\"FirstLineNumber\":11,\"LastLineNumber\":23,\"SectionType\":\"EDUCATION\",\"HeaderTextFound\":\"Education\"},{\"FirstLineNumber\":24,\"LastLineNumber\":51,\"SectionType\":\"SKILLS\",\"HeaderTextFound\":\"Expertise\"},{\"FirstLineNumber\":52,\"LastLineNumber\":98,\"SectionType\":\"WORK HISTORY\",\"HeaderTextFound\":\"Experience\"}],\"ResumeQuality\":[{\"Level\":\"Fatal Problems Found\",\"Findings\":[{\"QualityCode\":\"433\",\"Message\":\"We detected that this document contained at least some data that was laid out as columns or tables. We rearranged that data to make it more usable. NEVER use columns or tables in a resume.\"}]},{\"Level\":\"Major Issues Found\",\"Findings\":[{\"QualityCode\":\"300\",\"Message\":\"You should not use the PDF format for your resume. Due to inherent limitations with text extraction from PDFs, you are less likely to get a job when using a PDF resume.\"},{\"QualityCode\":\"302\",\"Message\":\"A first and last name was not found in the contact information. A resume should always include the candidate's first and last name.\"}]},{\"Level\":\"Data Missing\",\"Findings\":[{\"QualityCode\":\"222\",\"SectionIdentifiers\":[{\"SectionType\":\"WORK HISTORY\",\"Id\":\"POS-1\"}],\"Message\":\"Every position in a resume should have an employer name.\"}]},{\"Level\":\"Suggested Improvements\",\"Findings\":[{\"QualityCode\":\"112\",\"Message\":\"The following section was identified as a skills section type: 'Expertise'. Skills should not be in a separate section, but instead, each skill should be included in the descriptions of work history or education. THIS IS INCREDIBLY IMPORTANT FOR AI MATCHING ALGORITHMS\"}]}],\"ReservedData\":{\"Phones\":[\"Phone\\n+2348130039455\",\"+2348130039455\"],\"EmailAddresses\":[\"surajudeen.ridwan.a@gmail.com\"],\"OtherData\":[\"3, Rotimi Adeola Street, Owutu-Agric, Ikorodu\"]},\"PlainText\":\"Contact\\n\\nPhone\\n+2348130039455\\n\\nEmail\\nsurajudeen.ridwan.a@gmail.com\\n\\nAddress\\n3, Rotimi Adeola Street, Owutu-Agric, Ikorodu, Lagos, Nigeria.\\n\\nEducation\\n\\n\\n2016\\nBSc. Geology\\nUniversity of Ilorin\\n\\n2021\\n\\nMSc. Geology\\nUniversity of Ilorin,\\n\\n\\nExpertise\\n\\nReactjs\\n\\nReact Native\\nAngular\\n\\nNodejs\\n\\nMongoDb\\n\\nMySql\\n\\n\\nLanguage\\n\\n\\nEnglish\\nSurajudeen Ridwan\\nSoftware Developer\\nExperienced Web Developer adept in all stages of advanced web development.\\nProficient izvarious platforms, languages, and embedded systems. Able to\\neffectively self-manage during independent projects, as well as collaborate as\\npart of a productive team. Knowledgeable in user interface, testing, and\\ndebugging processes. Bringing forth expertise in design, installation, testing and\\nmaintenance of web systems. Equipped with a diverse and promising skill-set.\\nProficient in an assortment of technologies,\\n\\nExperience\\n\\n\\n2021- Present\\nRemote, Lagos\\n\\nFull-Stack Developer\\n\\nDeveloped a website's layout using Reactjs, Angular and React native.\\nEnvisioned a revolutionary new strategy using UX and UI techniques\\nCollaborated to create strategic initiaticves to design, code, and test\\nsolutions.\\nEffectively coded software changes and alterations based on specific\\ndesign specifications.\\nAnalyzed and designed new systems and appications.\\n\\n2019- 2021\\n\\n\\nArchs Solutions Technology, Lagos\\nFull-Stack Developer\\n\\nMet or exceeded the daily call goals and striving to achieve\\nexcellent customer satisfaction. • Participated in the planning and\\nexecution of 10+ business continuity/disaster recovery exercises.\\nAnalyzed systems flow, data usage, and work processes investigated\\n100% of problem areas. Documented 100% of technical\\nspecifications and dependencies of applications. Designed,\\ndeveloped, and modified numerous software systems and custom\\ncomponents. Developed tens new software solutions by analyzing\\nsystem performance standards.\\n\\n2017 - 2019\\nBools Technology, Lagos\\n\\nFrontend Developer\\nWriting well designed, testable, efficient code by using best software\\ndevelopment practices.\\nCreating website layout/user interfaces by using standard HTML.\\nJavascript and CSS with little of Reacts, React native and Angularjs.\\nIntegrate data from various back-end services and databases.\\nCreate and maintain software documentation.\\n\\nCooperate with web designers to match visual design intent.\\nWorked to meet client deadlines.\\nHelped to achieve a consistent look and visual theme across the\\nwebsite by promoting uniform fonts, formatting, images, and layout.\",\"DocumentLanguage\":\"en\",\"DocumentCulture\":\"en-NG\",\"ParserSettings\":\"Coverage.PersonalAttributes = True; Coverage.Training = True; Culture.CountryCodeForUnitedKingdomIsUK = True; Culture.DefaultCountryCode = NG; Culture.Language = English; Culture.PreferEnglishVersionIfTwoLanguagesInDocument = False; Data.UserDefinedParsing = False; OutputFormat.AssumeCompanyNameFromPrecedingJob = False; OutputFormat.ContactMethod.PackStyle = Split; OutputFormat.DateOutputStyle = ExplicitlyKnownDateInfoOnly; OutputFormat.NestJobsBasedOnDateRanges = True; OutputFormat.NormalizeRegions = False; OutputFormat.SimpleCustomLinkedIn = False; OutputFormat.SkillsStyle = Default; OutputFormat.StripParsedDataFromPositionHistoryDescription = True; OutputFormat.TelcomNumber.Style = Raw; OutputFormat.XmlFormat = HrXmlResume25\",\"DocumentLastModified\":\"2022-11-16\",\"SovrenSignature\":[\"Gk8AAAAAAAA=\"]}}",
+    "devChooseStacks": [
+      {
+        "$oid": "633aca84033bd1870f5ceaac"
+      },
+      {
+        "$oid": "63109441eeae527715f397dc"
+      }
+    ],
+    "devChooseSkills": [],
+    "devTechTestResult": [
+      {
+        "subject": {
+          "$oid": "63109441eeae527715f397dc"
+        },
+        "candidateId": "65832370",
+        "testId": "1430828",
+        "testLink": "https://www.hackerrank.com/tests/gbb45tebqs6/login?b=eyJ1c2VybmFtZSI6InN1cmFqdWRlZW4ucmlkd2FuLmFAZ21haWwuY29tIiwicGFzc3dvcmQiOiJhYTVlYTM2MyIsImhpZGUiOnRydWUsImhpZGVTd2l0Y2hBY2NvdW50IjpmYWxzZSwiaGlkZVNoYXJlSGFja2VyUHJvZmlsZSI6ZmFsc2UsImFjY29tbW9kYXRpb25zIjpudWxsfQ==",
+        "attemptCount": 1,
+        "status": "failed",
+        "attemptId": "45961416.0",
+        "plagiarism": false,
+        "attemptStartedAt": {
+          "$date": "2022-10-10T23:50:43.000Z"
+        },
+        "attemptEndedAt": {
+          "$date": "2022-10-11T01:54:19.000Z"
+        },
+        "testDuration": 8460,
+        "maxScore": 325,
+        "obtainedScore": 50,
+        "cutOffScore": 195,
+        "percentageScore": 15.38,
+        "isPassed": false,
+        "testName": "Back-End Developer (Node)",
+        "isCore": true,
+        "createdAt": {
+          "$date": "2022-12-21T06:12:20.721Z"
+        },
+        "_id": {
+          "$oid": "64c7806679a46a029436422d"
+        }
+      },
+      {
+        "subject": {
+          "$oid": "633aca84033bd1870f5ceaac"
+        },
+        "candidateId": "65823645",
+        "testId": "1415676",
+        "testLink": "https://www.hackerrank.com/tests/15jd6f8s5ki/login?b=eyJ1c2VybmFtZSI6InN1cmFqdWRlZW4ucmlkd2FuLmFAZ21haWwuY29tIiwicGFzc3dvcmQiOiIxMjMzOThjYSIsImhpZGUiOnRydWUsImhpZGVTd2l0Y2hBY2NvdW50IjpmYWxzZSwiaGlkZVNoYXJlSGFja2VyUHJvZmlsZSI6ZmFsc2UsImFjY29tbW9kYXRpb25zIjpudWxsfQ==",
+        "attemptCount": 1,
+        "status": "failed",
+        "attemptId": "45958684.0",
+        "plagiarism": false,
+        "attemptStartedAt": {
+          "$date": "2022-10-10T22:56:41.000Z"
+        },
+        "attemptEndedAt": {
+          "$date": "2022-10-10T23:47:19.000Z"
+        },
+        "testDuration": 8700,
+        "maxScore": 180,
+        "obtainedScore": 70,
+        "cutOffScore": 108,
+        "percentageScore": 38.88,
+        "isPassed": false,
+        "testName": "Front-End Developer (React)",
+        "isCore": true,
+        "createdAt": {
+          "$date": "2022-12-21T06:12:20.649Z"
+        },
+        "_id": {
+          "$oid": "64c7806679a46a029436422e"
+        }
+      }
+    ],
+    "devEnglishTest": [
+      {
+        "questions": 19,
+        "correct": 18,
+        "isPassed": true,
+        "attemptAt": {
+          "$date": "2022-10-13T11:15:57.147Z"
+        },
+        "attemptCount": 1,
+        "status": "Passed",
+        "_id": {
+          "$oid": "63a2b1a98b487af64a19995d"
+        }
+      }
+    ],
+    "clientCompanyName": "",
+    "clientCurrentRole": "",
+    "country": "",
+    "hiringNeeds": "",
+    "lastLogin": null,
+    "hiringSkills": [],
+    "hiringStacks": [],
+    "firstOnFourthStep": false,
+    "createdAt": {
+      "$date": "2022-10-07T10:52:54.661Z"
+    },
+    "updatedAt": {
+      "$date": "2025-01-08T10:11:48.070Z"
+    },
+    "devProjectDetails": [],
+    "technicalSkills": [],
+    "devAchievement": [],
+    "devTechSkills": [],
+    "__v": 0,
+    "firstEntry": true,
+    "emailType": [
+      {
+        "slug": "new_job_posted_for_dev",
+        "status": false,
+        "_id": {
+          "$oid": "652ac40340cdfad8151604a1"
+        }
+      }
+    ],
+    "jobNotificationSkillsStacks": [
+      "all-skill",
+      "all-stack"
+    ],
+    "devTotalExperience": 5,
+    "isProfileSnooze": false,
+    "industry": {
+      "$oid": "67074ec900d4e8563df14396"
+    },
+    "jobPreference": [
+      "onsite"
+    ],
+    "currency": "INR",
+    "salaryDuration": "annually"
+  }

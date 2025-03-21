@@ -1,3 +1,0 @@
-from Final_parsing import extract_skills
-import os
-import google.generativeai as genai

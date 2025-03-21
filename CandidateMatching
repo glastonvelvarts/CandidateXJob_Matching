@@ -1,0 +1,563 @@
+import numpy as np
+import pandas as pd
+from sklearn.metrics.pairwise import cosine_similarity
+import spacy
+from datetime import datetime
+
+# Load spaCy model for NLP tasks
+nlp = spacy.load("en_core_web_md")
+
+class CandidateMatchingSystem:
+    def __init__(self):
+        self.employers = []
+        self.candidates = []
+        self.job_embeddings = {}
+        self.candidate_embeddings = {}
+        
+    def preprocess_candidate_data(self, candidate_data):
+        """Extract meaningful features from candidate JSON data"""
+        processed_data = {}
+        
+        # Basic information
+        processed_data['candidate_id'] = str(candidate_data.get('_id', {}).get('$oid', ''))
+        processed_data['name'] = f"{candidate_data.get('fName', '')} {candidate_data.get('lName', '')}".strip()
+        processed_data['email'] = candidate_data.get('email', '')
+        processed_data['location'] = candidate_data.get('region', '')
+        processed_data['job_preference'] = candidate_data.get('jobPreference', [])
+        
+        # Experience details
+        processed_data['total_experience'] = candidate_data.get('devTotalExperience', 0)
+        
+        # Calculate average job tenure and extract employment details
+        employment_history = candidate_data.get('devEmployment', [])
+        valid_employments = [job for job in employment_history if job.get('designation') and job.get('companyName')]
+        
+        job_tenures = []
+        job_titles = []
+        companies = []
+        company_sizes = []  # Would need additional data source for company size
+        job_descriptions = []
+        
+        for job in valid_employments:
+            # Extract job title and company
+            if job.get('designation'):
+                job_titles.append(job.get('designation'))
+            if job.get('companyName'):
+                companies.append(job.get('companyName'))
+            
+            # Calculate tenure
+            if job.get('from') and job.get('to'):
+                try:
+                    from_date = datetime.strptime(job.get('from'), "%Y-%m-%d")
+                    
+                    if job.get('stillWorking', False):
+                        to_date = datetime.now()
+                    else:
+                        to_date = datetime.strptime(job.get('to'), "%Y-%m-%d")
+                    
+                    # Calculate months of experience
+                    months = (to_date.year - from_date.year) * 12 + (to_date.month - from_date.month)
+                    job_tenures.append(months)
+                except:
+                    pass
+            
+            # Extract job description for skill analysis
+            if job.get('aboutRole'):
+                job_descriptions.append(job.get('aboutRole'))
+        
+        # Calculate average job tenure in months (if available)
+        processed_data['avg_job_tenure'] = round(sum(job_tenures) / len(job_tenures)) if job_tenures else None
+        processed_data['job_titles'] = job_titles
+        processed_data['companies'] = companies
+        
+        # Determine if candidate has had leadership roles
+        leadership_keywords = ['lead', 'senior', 'manager', 'head', 'chief', 'director', 'supervisor']
+        processed_data['has_leadership_exp'] = any(any(keyword in title.lower() for keyword in leadership_keywords) 
+                                                  for title in job_titles)
+        
+        # Education details
+        education = candidate_data.get('devAcademic', [])
+        degrees = []
+        institutions = []
+        
+        for edu in education:
+            if edu.get('specialization'):
+                degrees.append(edu.get('specialization'))
+            if edu.get('institution'):
+                institutions.append(edu.get('institution'))
+        
+        processed_data['degrees'] = degrees
+        processed_data['institutions'] = institutions
+        processed_data['highest_degree'] = self._determine_highest_degree(degrees)
+        
+        # Extract skills from resume data
+        processed_data['skills'] = self._extract_skills_from_resume(candidate_data)
+        
+        # Test results
+        tech_tests = candidate_data.get('devTechTestResult', [])
+        english_tests = candidate_data.get('devEnglishTest', [])
+        
+        processed_data['tech_test_results'] = [
+            {
+                'test_name': test.get('testName', ''),
+                'score': test.get('percentageScore', 0),
+                'passed': test.get('isPassed', False)
+            }
+            for test in tech_tests
+        ]
+        
+        processed_data['english_test_passed'] = any(test.get('isPassed', False) for test in english_tests)
+        
+        # Salary expectations
+        processed_data['current_salary'] = candidate_data.get('devCSalar', '')
+        processed_data['expected_salary'] = candidate_data.get('devESalary', '')
+        processed_data['salary_currency'] = candidate_data.get('currency', 'USD')
+        processed_data['salary_duration'] = candidate_data.get('salaryDuration', 'annually')
+        
+        return processed_data
+    
+    def _determine_highest_degree(self, degrees):
+        """Determine the highest degree from a list of degrees"""
+        degree_hierarchy = {
+            'PhD': 5,
+            'Doctorate': 5,
+            'MD': 5,
+            'Master': 4,
+            'MSc': 4,
+            'MS': 4,
+            'MA': 4,
+            'MBA': 4,
+            'Bachelor': 3,
+            'BSc': 3,
+            'BS': 3,
+            'BA': 3,
+            'Associate': 2,
+            'Diploma': 1,
+            'Certificate': 0
+        }
+        
+        highest_rank = -1
+        highest_degree = None
+        
+        for degree in degrees:
+            for degree_type, rank in degree_hierarchy.items():
+                if degree_type.lower() in degree.lower() and rank > highest_rank:
+                    highest_rank = rank
+                    highest_degree = degree
+        
+        return highest_degree
+    
+    def _extract_skills_from_resume(self, candidate_data):
+        """Extract skills from resume data using both explicit skills and job descriptions"""
+        skills = set()
+        
+        # Check if there's parsed resume data with skills
+        resume_parse_data = candidate_data.get('resumeParseData', '')
+        if resume_parse_data and isinstance(resume_parse_data, str):
+            # Try to find skill patterns in the string (simplified approach)
+            # A more robust approach would parse the JSON string
+            tech_skills = ['React', 'Angular', 'Node', 'JavaScript', 'HTML', 'CSS', 
+                          'MongoDB', 'MySQL', 'UI', 'UX', 'Python', 'Java', 'C#',
+                          'AWS', 'Azure', 'Docker', 'Kubernetes', 'DevOps']
+            
+            for skill in tech_skills:
+                if skill.lower() in resume_parse_data.lower():
+                    skills.add(skill)
+        
+        # Extract from employment history descriptions
+        employment_history = candidate_data.get('devEmployment', [])
+        for job in employment_history:
+            if job.get('aboutRole'):
+                # Process job description with spaCy
+                doc = nlp(job.get('aboutRole'))
+                
+                # Extract technical terms (noun chunks that might be skills)
+                for chunk in doc.noun_chunks:
+                    if len(chunk.text) > 3:  # Filter out very short chunks
+                        skills.add(chunk.text.strip())
+        
+        # Add explicit skills from devChooseSkills if they exist
+        dev_skills = candidate_data.get('devChooseSkills', [])
+        if isinstance(dev_skills, list):
+            for skill in dev_skills:
+                if isinstance(skill, str):
+                    skills.add(skill)
+                elif isinstance(skill, dict) and '$oid' in skill:
+                    # This is an ObjectId reference, we'd need to resolve it
+                    pass
+        
+        return list(skills)
+    
+    def create_candidate_embeddings(self, candidate_data):
+        """Create embeddings for candidate based on skills and experience"""
+        # Combine relevant text for embedding
+        text = ""
+        
+        # Add job titles and descriptions
+        for job in candidate_data.get('devEmployment', []):
+            if job.get('designation'):
+                text += job.get('designation') + " "
+            if job.get('aboutRole'):
+                text += job.get('aboutRole') + " "
+        
+        # Add skills
+        skills = self._extract_skills_from_resume(candidate_data)
+        text += " ".join(skills)
+        
+        # Create embedding using spaCy
+        doc = nlp(text)
+        return doc.vector
+    
+    def match_candidate_to_job(self, candidate, job_description):
+        """Score a candidate against a job description"""
+        scores = {}
+        
+        # 1. Skills Match Score (30%)
+        skills_score = self._calculate_skills_match(candidate, job_description)
+        scores['skills_match'] = skills_score
+        
+        # 2. Experience Score (25%)
+        experience_score = self._calculate_experience_match(candidate, job_description)
+        scores['experience_match'] = experience_score
+        
+        # 3. Education Score (15%)
+        education_score = self._calculate_education_match(candidate, job_description)
+        scores['education_match'] = education_score
+        
+        # 4. Tests & Certifications Score (10%)
+        tests_score = self._calculate_tests_score(candidate, job_description)
+        scores['tests_score'] = tests_score
+        
+        # 5. Cultural Fit Score (10%)
+        cultural_fit_score = self._calculate_cultural_fit(candidate, job_description)
+        scores['cultural_fit'] = cultural_fit_score
+        
+        # 6. Job Preference Match (10%)
+        preference_score = self._calculate_preference_match(candidate, job_description)
+        scores['preference_match'] = preference_score
+        
+        # Calculate weighted total score
+        weights = {
+            'skills_match': 0.30,
+            'experience_match': 0.25,
+            'education_match': 0.15,
+            'tests_score': 0.10,
+            'cultural_fit': 0.10,
+            'preference_match': 0.10
+        }
+        
+        total_score = sum(scores[key] * weights[key] for key in weights)
+        
+        return {
+            'candidate_id': candidate.get('candidate_id'),
+            'candidate_name': candidate.get('name'),
+            'total_score': total_score,
+            'detailed_scores': scores
+        }
+    
+    def _calculate_skills_match(self, candidate, job_description):
+        """Calculate how well candidate skills match job requirements"""
+        # This would use vector similarity and keyword matching
+        # Simplified implementation for demo purposes
+        candidate_skills = set(s.lower() for s in candidate.get('skills', []))
+        required_skills = set(s.lower() for s in job_description.get('required_skills', []))
+        
+        if not required_skills:
+            return 0.5  # Default score if no required skills specified
+        
+        # Calculate match percentage
+        matches = sum(1 for skill in required_skills if any(skill in c_skill for c_skill in candidate_skills))
+        score = matches / len(required_skills) if required_skills else 0
+        
+        # Bonus for having more skills than required
+        bonus = min(0.2, (len(candidate_skills) - len(required_skills)) * 0.02) if len(candidate_skills) > len(required_skills) else 0
+        
+        return min(1.0, score + bonus)
+    
+    def _calculate_experience_match(self, candidate, job_description):
+        """Calculate experience match based on years and relevance"""
+        required_experience = job_description.get('min_years_experience', 0)
+        candidate_experience = candidate.get('total_experience', 0)
+        
+        # Base score on years of experience
+        if candidate_experience >= required_experience * 1.5:
+            years_score = 1.0  # Exceeds requirements
+        elif candidate_experience >= required_experience:
+            years_score = 0.8  # Meets requirements
+        elif candidate_experience >= required_experience * 0.8:
+            years_score = 0.6  # Slightly below requirements
+        elif candidate_experience >= required_experience * 0.5:
+            years_score = 0.3  # Significantly below requirements
+        else:
+            years_score = 0.1  # Far below requirements
+        
+        # Score for relevant experience
+        relevance_score = 0.5  # Default middle score
+        # Would need job title comparison logic here
+        
+        # Average job tenure score
+        tenure_score = 0.5  # Default
+        avg_tenure = candidate.get('avg_job_tenure', 0)
+        if avg_tenure:
+            if avg_tenure > 36:  # 3+ years average
+                tenure_score = 1.0
+            elif avg_tenure > 24:  # 2+ years average
+                tenure_score = 0.8
+            elif avg_tenure > 12:  # 1+ year average
+                tenure_score = 0.6
+            else:  # Less than 1 year average
+                tenure_score = 0.3
+        
+        # Combine scores with weights
+        return years_score * 0.5 + relevance_score * 0.3 + tenure_score * 0.2
+    
+    def _calculate_education_match(self, candidate, job_description):
+        """Calculate education match"""
+        required_degree = job_description.get('required_education', '')
+        candidate_degree = candidate.get('highest_degree', '')
+        
+        # Map degrees to numerical values for comparison
+        degree_values = {
+            'High School': 1,
+            'Associate': 2,
+            'Diploma': 2,
+            'Certificate': 2,
+            'Bachelor': 3,
+            'BSc': 3,
+            'BA': 3,
+            'Master': 4,
+            'MSc': 4,
+            'MBA': 4,
+            'PhD': 5,
+            'Doctorate': 5
+        }
+        
+        # Get numerical values
+        required_value = 0
+        candidate_value = 0
+        
+        for degree, value in degree_values.items():
+            if required_degree and degree.lower() in required_degree.lower():
+                required_value = value
+            if candidate_degree and degree.lower() in candidate_degree.lower():
+                candidate_value = value
+        
+        # Score based on comparison
+        if required_value == 0:  # No specific requirement
+            return 0.7  # Default good score
+        elif candidate_value >= required_value:
+            return 1.0  # Meets or exceeds requirements
+        elif candidate_value == required_value - 1:
+            return 0.7  # One level below
+        elif candidate_value == required_value - 2:
+            return 0.4  # Two levels below
+        else:
+            return 0.2  # Far below requirements
+    
+    def _calculate_tests_score(self, candidate, job_description):
+        """Calculate score based on test results"""
+        test_results = candidate.get('tech_test_results', [])
+        english_passed = candidate.get('english_test_passed', False)
+        
+        # English test contributes 40% of this category
+        english_score = 0.4 if english_passed else 0.0
+        
+        # Technical tests contribute 60%
+        tech_score = 0.0
+        relevant_tests = []
+        
+        # Find tests relevant to the job
+        required_skills = [s.lower() for s in job_description.get('required_skills', [])]
+        
+        for test in test_results:
+            test_name = test.get('test_name', '').lower()
+            # Check if test is relevant to any required skill
+            is_relevant = any(skill in test_name for skill in required_skills)
+            if is_relevant:
+                relevant_tests.append(test)
+        
+        # If no relevant tests found, use all tests
+        if not relevant_tests and test_results:
+            relevant_tests = test_results
+        
+        # Calculate average score from relevant tests
+        if relevant_tests:
+            passed_tests = sum(1 for test in relevant_tests if test.get('passed', False))
+            tech_score = (passed_tests / len(relevant_tests)) * 0.6
+        
+        return english_score + tech_score
+    
+    def _calculate_cultural_fit(self, candidate, job_description):
+        """Estimate cultural fit based on company types and job history"""
+        # This would be better with actual cultural assessment data
+        # For now, use a simplified approach based on company types
+        
+        # Default middle score
+        return 0.7
+    
+    def _calculate_preference_match(self, candidate, job_description):
+        """Calculate match based on job preferences (remote/onsite, salary, location)"""
+        score = 0.5  # Default middle score
+        
+        # Location match
+        job_location = job_description.get('location', '').lower()
+        candidate_location = candidate.get('location', '').lower()
+        
+        if job_location and candidate_location and job_location == candidate_location:
+            score += 0.2
+        
+        # Work type preference
+        job_type = job_description.get('job_type', '').lower()  # remote, onsite, hybrid
+        candidate_preferences = [p.lower() for p in candidate.get('job_preference', [])]
+        
+        if job_type and candidate_preferences and job_type in candidate_preferences:
+            score += 0.2
+        
+        # Salary match
+        job_min_salary = job_description.get('min_salary', 0)
+        job_max_salary = job_description.get('max_salary', 0)
+        candidate_expected = float(candidate.get('expected_salary', 0)) if candidate.get('expected_salary', '') else 0
+        
+        if candidate_expected and job_min_salary and job_max_salary:
+            if job_min_salary <= candidate_expected <= job_max_salary:
+                score += 0.1  # Perfect range
+            elif candidate_expected < job_min_salary:
+                score += 0.05  # Below range, might accept higher
+            elif candidate_expected > job_max_salary:
+                score -= 0.1  # Above range, might be too expensive
+        
+        return min(1.0, max(0.0, score))
+    
+    def rank_candidates_for_job(self, job_description, candidates, top_n=10):
+        """Rank candidates for a specific job"""
+        results = []
+        
+        for candidate in candidates:
+            match_result = self.match_candidate_to_job(candidate, job_description)
+            results.append(match_result)
+        
+        # Sort by total score in descending order
+        results.sort(key=lambda x: x['total_score'], reverse=True)
+        
+        # Return top N candidates
+        return results[:top_n]
+    
+    def get_vector_similar_candidates(self, job_embedding, candidate_embeddings, top_n=20):
+        """Get most similar candidates based on vector similarity"""
+        similarities = []
+        
+        for candidate_id, embedding in candidate_embeddings.items():
+            # Calculate cosine similarity
+            similarity = cosine_similarity([job_embedding], [embedding])[0][0]
+            similarities.append((candidate_id, similarity))
+        
+        # Sort by similarity in descending order
+        similarities.sort(key=lambda x: x[1], reverse=True)
+        
+        # Return top N candidate IDs
+        return [candidate_id for candidate_id, _ in similarities[:top_n]]
+
+
+# Sample usage
+if __name__ == "__main__":
+    # Initialize the system
+    matching_system = CandidateMatchingSystem()
+    
+    # Sample candidate data (simplified from your JSON)
+    sample_candidate_data = {
+        "_id": {"$oid": "644ce07a78e8fc84119ab12f"},
+        "fName": "RIdwan",
+        "lName": "Surajudeen",
+        "email": "surajudeen.ridwan.a@yopmail.com",
+        "region": "IN",
+        "devTotalExperience": 5,
+        "jobPreference": ["onsite"],
+        "devCSalar": "10.5",
+        "devESalary": "12.5",
+        "currency": "INR",
+        "salaryDuration": "annually",
+        "devEmployment": [
+            {
+                "designation": "Full Stack Developer",
+                "companyName": "",
+                "from": "2021-01-01",
+                "to": "2022-11-16",
+                "stillWorking": True,
+                "aboutRole": "Developed a website's layout using Reactjs, Angular and React native.\nEnvisioned a revolutionary new strategy using UX and UI techniques\nCollaborated to create strategic initiaticves to design, code, and test\nsolutions."
+            },
+            {
+                "designation": "Full Stack Developer",
+                "companyName": "Archs Solutions Technology",
+                "from": "2019-01-01",
+                "to": "2021-12-31",
+                "stillWorking": False,
+                "aboutRole": "Met or exceeded the daily call goals and striving to achieve\nexcellent customer satisfaction. Participated in the planning and execution of 10+ business continuity/disaster recovery exercises."
+            },
+            {
+                "designation": "Frontend Developer",
+                "companyName": "Bools Technology",
+                "from": "2017-01-01",
+                "to": "2019-12-31",
+                "stillWorking": False,
+                "aboutRole": "Writing well designed, testable, efficient code by using best software\ndevelopment practices.\nCreating website layout/user interfaces by using standard HTML.\nJavascript and CSS with little of Reacts, React native and Angularjs."
+            }
+        ],
+        "devAcademic": [
+            {
+                "institution": "University of Ilorin",
+                "specialization": "MSc.",
+                "_id": {"$oid": "63a28d4323d3add2fd5fd7d7"}
+            },
+            {
+                "institution": "University of Ilorin",
+                "specialization": "BSc.",
+                "_id": {"$oid": "63a28d4323d3add2fd5fd7d9"}
+            }
+        ],
+        "devTechTestResult": [
+            {
+                "subject": {"$oid": "63109441eeae527715f397dc"},
+                "testName": "Back-End Developer (Node)",
+                "isPassed": False,
+                "percentageScore": 15.38,
+            },
+            {
+                "subject": {"$oid": "633aca84033bd1870f5ceaac"},
+                "testName": "Front-End Developer (React)",
+                "isPassed": False,
+                "percentageScore": 38.88,
+            }
+        ],
+        "devEnglishTest": [
+            {
+                "isPassed": True,
+                "correct": 18,
+                "questions": 19
+            }
+        ]
+    }
+    
+    # Process the candidate data
+    processed_candidate = matching_system.preprocess_candidate_data(sample_candidate_data)
+    
+    # Sample job description
+    job_description = {
+        "title": "Full Stack Developer",
+        "location": "IN",
+        "job_type": "onsite",
+        "min_years_experience": 3,
+        "min_salary": 9,
+        "max_salary": 14,
+        "required_skills": ["React", "Node.js", "JavaScript", "HTML", "CSS", "MongoDB"],
+        "required_education": "Bachelor"
+    }
+    
+    # Match the candidate to the job
+    match_result = matching_system.match_candidate_to_job(processed_candidate, job_description)
+    
+    # Print the result
+    print(f"Candidate: {match_result['candidate_name']}")
+    print(f"Total Match Score: {match_result['total_score']:.2f}")
+    print("\nDetailed Scores:")
+    for key, value in match_result['detailed_scores'].items():
+        print(f"{key}: {value:.2f}")

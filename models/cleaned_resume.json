@@ -1,0 +1,78 @@
+{
+    "Full Name": "RIdwan Surajudeen",
+    "Email": "surajudeen.ridwan.a@yopmail.com",
+    "Phone Number": "8130039455",
+    "Current Job Title": "Software Engineer",
+    "City": "Churk",
+    "Country Code": "91",
+    "LinkedIn Profile": null,
+    "GitHub Profile": null,
+    "Portfolio Website": null,
+    "Education": [
+        {
+            "specialization": "MSc.",
+            "institution": "University of Ilorin",
+            "degree": "MSc., BSc.",
+            "year": "2016, 2021"
+        },
+        {
+            "specialization": "BSc.",
+            "institution": "University of Ilorin",
+            "degree": "MSc., BSc.",
+            "year": "2016, 2021"
+        }
+    ],
+    "Employment History": [
+        {
+            "designation": "Full Stack Developer",
+            "company": "Archs Solutions Technology, Bools Technology",
+            "from": "2021-01-01",
+            "to": "2022-11-16",
+            "location": "Lagos, Lagos, Lagos"
+        },
+        {
+            "designation": "Frontend Developer",
+            "company": "Bools Technology",
+            "from": "2017-01-01",
+            "to": "2019-12-31",
+            "location": "Lagos, Lagos, Lagos"
+        },
+        {
+            "designation": "Full-Stack Developer, Full-Stack Developer, Frontend Developer",
+            "company": "Archs Solutions Technology, Bools Technology",
+            "from": "2021-01-01, 2019-01-01, 2017-01-01",
+            "to": "2022-11-16, 2021-12-31, 2019-12-31",
+            "location": "Lagos, Lagos, Lagos"
+        },
+        {
+            "designation": "Full Stack Developer",
+            "company": "Archs Solutions Technology",
+            "from": "2019-01-01",
+            "to": "2021-12-31",
+            "location": "Lagos, Lagos, Lagos"
+        }
+    ],
+    "Skills": [
+        "Reactjs",
+        "React Native",
+        "Angular",
+        "Nodejs",
+        "MongoDB",
+        "MySQL",
+        "Javascript",
+        "CSS",
+        "HTML",
+        "Angularjs",
+        "User Interface",
+        "UI",
+        "UX",
+        "Visual Design",
+        "Embedded Systems",
+        "Business Continuity",
+        "Disaster Recovery",
+        "Software Documentation",
+        "Geology",
+        "Maintenance"
+    ],
+    "Languages Known": "English"
+}

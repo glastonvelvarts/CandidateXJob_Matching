@@ -31,7 +31,12 @@ async def fill_missing_details(field_name, existing_value, resume_text):
     if existing_value:
         return existing_value.strip()
     
-    prompt = f"Extract only the {field_name} from the given resume text. If missing, return None. Return only the value without any explanations or additional text.\nResume:\n{resume_text}"
+    prompt = f"""
+    FIND and Extract only the {field_name} from the given resume text. 
+    If missing, return None. Return only the value without any explanations.
+    Resume:
+    {resume_text}
+    """
     loop = asyncio.get_event_loop()
     
     try:
@@ -45,7 +50,7 @@ async def fill_missing_details(field_name, existing_value, resume_text):
     except Exception as e:
         print(f"Error fetching {field_name}: {e}")
         return None
-    
+
 async def process_single_resume():
     data = resume_collection.find_one()
     if not data:
@@ -54,23 +59,25 @@ async def process_single_resume():
 
     resume_text = data.get("resumeParseData", "")
 
-    # Parallelize LLM calls
+    # Extract basic details
     details = await asyncio.gather(
         fill_missing_details("full name", f"{data.get('fName', '')} {data.get('lName', '')}".strip(), resume_text),
         fill_missing_details("email", data.get("email", ""), resume_text),
         fill_missing_details("phone number", data.get("number", ""), resume_text),
         fill_missing_details("current job title", data.get("devDesg", ""), resume_text),
         fill_missing_details("city", data.get("devCity", ""), resume_text),
+        fill_missing_details("state", data.get("devState", ""), resume_text),
         fill_missing_details("country code", data.get("devCountryCode", ""), resume_text),
-        fill_missing_details("LinkedIn profile", data.get("linkedin", ""), resume_text),
-        fill_missing_details("GitHub profile", data.get("github", ""), resume_text),
+        fill_missing_details("LinkedIn profile", data.get("devSocialProfile.linkedin", ""), resume_text),
+        fill_missing_details("GitHub profile", data.get("devSocialProfile.gitHub", ""), resume_text),
         fill_missing_details("portfolio website", data.get("portfolio", ""), resume_text),
         fill_missing_details("skills", ", ".join(data.get("devSkills", [])), resume_text),
         fill_missing_details("languages", data.get("languages", ""), resume_text),
     )
     
-    (full_name, email, phone_number, job_title, city, country_code, linkedin, github, portfolio, skills, languages) = details
+    (full_name, email, phone_number, job_title, city, state, country_code, linkedin, github, portfolio, skills, languages) = details
 
+    # Extract Employment History
     employment_history = []
     for job in data.get("devEmployment", []):
         employment_details = await asyncio.gather(
@@ -88,6 +95,7 @@ async def process_single_resume():
             "location": employment_details[4],
         })
 
+    # Extract Education Details
     education = []
     for edu in data.get("devAcademic", []):
         education_details = await asyncio.gather(
@@ -103,12 +111,19 @@ async def process_single_resume():
             "year": education_details[3],
         })
 
+    # Extract Projects (Check both devProjectDetails & LLM)
+    projects = data.get("devProjectDetails", [])
+    if not projects:
+        print("No projects found in devProjectDetails, extracting from resume text...")
+        projects = await fill_missing_details("project details", "", resume_text)
+    
     cleaned_data = {
         "Full Name": full_name,
         "Email": email,
         "Phone Number": phone_number,
         "Current Job Title": job_title,
         "City": city,
+        "State": state,
         "Country Code": country_code,
         "LinkedIn Profile": linkedin,
         "GitHub Profile": github,
@@ -117,8 +132,8 @@ async def process_single_resume():
         "Employment History": employment_history,
         "Skills": [skill.strip() for skill in skills.split(",") if skill.strip()],
         "Languages Known": languages,
+        "Projects": projects if isinstance(projects, list) else [projects]  # Ensure projects is a list
     }
-
     return cleaned_data
 
 print("Processing resumes...")

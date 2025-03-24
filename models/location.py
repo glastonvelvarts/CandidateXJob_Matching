@@ -68,11 +68,12 @@ Return ONLY a valid JSON with these three fields.
         return location_data
     except json.JSONDecodeError:
         # If parsing fails, return structured data without LLM
-        return {
+        user_resume= {
             "city": city or "",
             "state": state or "", 
             "country": country_name or country_code or ""
         }
+        return user_resume
 
 async def main():
     # Get data from your existing function

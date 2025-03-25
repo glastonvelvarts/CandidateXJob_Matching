@@ -1,4 +1,82 @@
 {
-    "LinkedIn Profile": "",
-    "GitHub Profile": ""
+    "Full Name": "RIdwan Surajudeen",
+    "Email": "surajudeen.ridwan.a@yopmail.com",
+    "Phone Number": "8130039455",
+    "Current Job Title": "Software Engineer",
+    "City": "Churk",
+    "State": "UP",
+    "Country Code": "91",
+    "LinkedIn Profile": null,
+    "GitHub Profile": null,
+    "Portfolio Website": null,
+    "Education": [
+        {
+            "specialization": "MSc.",
+            "institution": "University of Ilorin",
+            "degree": "MSc, BSc",
+            "year": "2021, 2016"
+        },
+        {
+            "specialization": "BSc.",
+            "institution": "University of Ilorin",
+            "degree": "MSc, BSc",
+            "year": "MSc, BSc"
+        }
+    ],
+    "Employment History": [
+        {
+            "designation": "Full-Stack Developer, Full-Stack Developer, Frontend Developer",
+            "company": "Archs Solutions Technology, Bools Technology",
+            "from": "2021-01-01, 2019-01-01, 2017-01-01",
+            "to": "2022-11-16, 2021-12-31, 2019-12-31",
+            "location": "Lagos, Lagos, Lagos, Remote, Lagos"
+        },
+        {
+            "designation": "Full Stack Developer",
+            "company": "Archs Solutions Technology, Bools Technology",
+            "from": "2021-01-01",
+            "to": "2022-11-16",
+            "location": "Lagos"
+        },
+        {
+            "designation": "Full Stack Developer",
+            "company": "Archs Solutions Technology",
+            "from": "2019-01-01",
+            "to": "2021-12-31",
+            "location": "Lagos, Lagos, Lagos, Remote, Lagos"
+        },
+        {
+            "designation": "Frontend Developer",
+            "company": "Bools Technology",
+            "from": "2017-01-01",
+            "to": "2019-12-31",
+            "location": "Lagos, Lagos, Lagos"
+        }
+    ],
+    "Skills": [
+        "Reactjs",
+        "React Native",
+        "Angular",
+        "Nodejs",
+        "MongoDB",
+        "MySQL",
+        "Javascript",
+        "CSS",
+        "HTML",
+        "Angularjs",
+        "User Interface",
+        "UX",
+        "UI",
+        "Business Continuity",
+        "Disaster Recovery",
+        "Embedded Systems",
+        "Software Documentation",
+        "Geology",
+        "Maintenance",
+        "Visual Design"
+    ],
+    "Languages Known": "English",
+    "Projects": [
+        "Developed a website's layout using Reactjs, Angular and React native.\nEnvisioned a revolutionary new strategy using UX and UI techniques\nCollaborated to create strategic initiatives to design, code, and test solutions.\nEffectively coded software changes and alterations based on specific design specifications.\nAnalyzed and designed new systems and applications.\nMet or exceeded the daily call goals and striving to achieve excellent customer satisfaction.\nParticipated in the planning and execution of 10+ business continuity/disaster recovery exercises.\nAnalyzed systems flow, data usage, and work processes investigated 100% of problem areas.\nDocumented 100% of technical specifications and dependencies of applications.\nDesigned, developed, and modified numerous software systems and custom components.\nDeveloped tens new software solutions by analyzing system performance standards.\nWriting well designed, testable, efficient code by using best software development practices.\nCreating website layout/user interfaces by using standard HTML.\nJavascript and CSS with little of Reacts, React native and Angularjs.\nIntegrate data from various back-end services and databases.\nCreate and maintain software documentation.\nCooperate with web designers to match visual design intent.\nWorked to meet client deadlines.\nHelped to achieve a consistent look and visual theme across the website by promoting uniform fonts, formatting, images, and layout."
+    ]
 }

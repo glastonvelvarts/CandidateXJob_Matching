@@ -22,7 +22,6 @@ def get_country_from_code(country_code):
         return None
         
     try:
-        # Remove '+' if present
         if country_code.startswith('+'):
             country_code = country_code[1:]
             
@@ -34,7 +33,6 @@ def get_country_from_code(country_code):
 
 async def extract_location(city, state, country_code):
     """Extract structured location data with minimal LLM use"""
-    # Try to convert country code to country name
     country_name = get_country_from_code(country_code)
     
     # If we have all the data, return immediately without using LLM

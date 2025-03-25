@@ -1,0 +1,12 @@
+[
+    {
+        "company_name": "Archs Solutions Technology",
+        "error": "Failed to parse company details",
+        "raw_response": "```json\n{\n  \"company_name\": \"Archs Solutions Technology\",\n  \"classification\": {\n    \"type\": \"SME\",\n    \"industry\": \"IT\",\n    \"size\": \"Small\",\n    \"business_model\": \"Service-based\"\n  },\n  \"profile\": {\n    \"primary_focus\": \"Software Development\",\n    \"technologies_or_domain\": [\"Web Development\", \"Mobile Development\", \"Cloud Computing\"],\n    \"market_position\": \"Emerging\",\n    \"notable_characteristics\": \"Client-focused, Agile methodology\"\n  },\n  \"work_environment\": {\n    \"culture\": \"Collaborative\",\n    \"tech_stack\": [\"React\", \"Node.js\", \"AWS\", \"Python\"],\n    \"innovation_level\": \"Moderate\",\n    \"growth_potential\": \"Moderate\"\n  }\n}\n```"
+    },
+    {
+        "company_name": "Bools Technology",
+        "error": "Failed to parse company details",
+        "raw_response": "```json\n{\n  \"company_name\": \"Bools Technology\",\n  \"classification\": {\n    \"type\": \"Startup\",\n    \"industry\": \"IT\",\n    \"size\": \"Small\",\n    \"business_model\": \"Product-based\"\n  },\n  \"profile\": {\n    \"primary_focus\": \"Software Development\",\n    \"technologies_or_domain\": [\"AI\", \"Cloud Computing\", \"Data Analytics\"],\n    \"market_position\": \"Emerging\",\n    \"notable_characteristics\": \"Innovation-driven, Agile\"\n  },\n  \"work_environment\": {\n    \"culture\": \"Collaborative\",\n    \"tech_stack\": [\"Python\", \"React\", \"AWS\", \"Docker\"],\n    \"innovation_level\": \"High\",\n    \"growth_potential\": \"Strong\"\n  }\n}\n```"
+    }
+]

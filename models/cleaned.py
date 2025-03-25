@@ -51,6 +51,30 @@ async def fill_missing_details(field_name, existing_value, resume_text):
         print(f"Error fetching {field_name}: {e}")
         return None
 
+def clean_employment_history(employment_data):
+    # Create a dictionary to track unique employment entries
+    unique_entries = {}
+    
+    for entry in employment_data:
+        # Create a unique key based on company and designation
+        key = f"{entry.get('company', '').lower()}_{entry.get('designation', '').lower()}"
+        
+        # If this entry doesn't exist or has a more recent date range, add/update it
+        if key not in unique_entries or (
+            entry.get('from') and 
+            (not unique_entries[key].get('from') or 
+             entry.get('from') < unique_entries[key].get('from'))
+        ):
+            unique_entries[key] = entry
+    
+    # Convert back to list and sort by start date
+    cleaned_history = list(unique_entries.values())
+    
+    # Sort by start date (assuming 'from' is in a sortable format like YYYY-MM-DD)
+    cleaned_history.sort(key=lambda x: x.get('from', ''), reverse=True)
+    
+    return cleaned_history
+
 async def process_single_resume():
     data = resume_collection.find_one()
     if not data:
@@ -87,13 +111,19 @@ async def process_single_resume():
             fill_missing_details("end date", job.get("to", ""), resume_text),
             fill_missing_details("job location", job.get("location", ""), resume_text),
         )
-        employment_history.append({
-            "designation": employment_details[0],
-            "company": employment_details[1],
-            "from": employment_details[2],
-            "to": employment_details[3],
-            "location": employment_details[4],
-        })
+        
+        # Only add non-empty employment entries
+        if any(employment_details):
+            employment_history.append({
+                "designation": employment_details[0] or job.get("designation", ""),
+                "company": employment_details[1] or job.get("companyName", ""),
+                "from": employment_details[2] or job.get("from", ""),
+                "to": employment_details[3] or job.get("to", ""),
+                "location": employment_details[4] or job.get("location", ""),
+            })
+
+    # Clean and deduplicate employment history
+    cleaned_employment_history = clean_employment_history(employment_history)
 
     # Extract Education Details
     education = []
@@ -105,10 +135,10 @@ async def process_single_resume():
             fill_missing_details("graduation year", edu.get("year", ""), resume_text),
         )
         education.append({
-            "specialization": education_details[0],
-            "institution": education_details[1],
-            "degree": education_details[2],
-            "year": education_details[3],
+            "specialization": education_details[0] or edu.get("specialization", ""),
+            "institution": education_details[1] or edu.get("institution", ""),
+            "degree": education_details[2] or edu.get("degree", ""),
+            "year": education_details[3] or edu.get("year", ""),
         })
 
     # Extract Projects (Check both devProjectDetails & LLM)
@@ -129,7 +159,7 @@ async def process_single_resume():
         "GitHub Profile": github,
         "Portfolio Website": portfolio,
         "Education": education,
-        "Employment History": employment_history,
+        "Employment History": cleaned_employment_history,
         "Skills": [skill.strip() for skill in skills.split(",") if skill.strip()],
         "Languages Known": languages,
         "Projects": projects if isinstance(projects, list) else [projects]  # Ensure projects is a list
@@ -141,7 +171,11 @@ start_time = time.time()
 cleaned_data = asyncio.run(process_single_resume())
 
 if cleaned_data:
+    # Save to JSON file
     with open("cleaned_resume.json", "w") as f:
         json.dump(cleaned_data, f, indent=4)
+    
+    # Optional: Save to MongoDB
+    cleaned_collection.insert_one(cleaned_data)
 
 print(f"Processing completed in {time.time() - start_time} seconds.")

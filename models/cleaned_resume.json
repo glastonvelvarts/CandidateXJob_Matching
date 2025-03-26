@@ -11,16 +11,16 @@
     "Portfolio Website": "",
     "Education": [
         {
-            "specialization": "Geology",
+            "degree": "MSc.",
             "institution": "University of Ilorin",
-            "degree": "",
-            "year": "2021"
+            "specialization": "",
+            "year": ""
         },
         {
-            "specialization": "Geology",
+            "degree": "BSc.",
             "institution": "University of Ilorin",
-            "degree": "",
-            "year": "2016"
+            "specialization": "",
+            "year": ""
         }
     ],
     "Employment History": [
@@ -86,7 +86,6 @@
             "description": "Developed a website's layout using Reactjs, Angular and React native.\nEnvisioned a revolutionary new strategy using UX and UI techniques\nCollaborated to create strategic initiaticves to design, code, and test\nsolutions.\nEffectively coded software changes and alterations based on specific\ndesign specifications.\nAnalyzed and designed new systems and appications.",
             "techStack": [],
             "tools": [],
-            "githubLink": "",
             "duration": ""
         },
         {
@@ -94,7 +93,6 @@
             "description": "Met or exceeded the daily call goals and striving to achieve\nexcellent customer satisfaction. \u2022 Participated in the planning and execution of 10+ business continuity/disaster recovery exercises.\nAnalyzed systems flow, data usage, and work processes investigated\n100% of problem areas. Documented 100% of technical\nspecifications and dependencies of applications. Designed,\ndeveloped, and modified numerous software systems and custom\ncomponents. Developed tens new software solutions by analyzing\nsystem performance standards.",
             "techStack": [],
             "tools": [],
-            "githubLink": "",
             "duration": ""
         }
     ]

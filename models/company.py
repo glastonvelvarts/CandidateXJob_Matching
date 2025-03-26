@@ -142,7 +142,7 @@ load_dotenv()
 
 # Set up Gemini API key
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-pro")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash-lite")
 
 # Initialize Gemini model
 model = genai.GenerativeModel(model_name=GEMINI_MODEL)
@@ -232,5 +232,5 @@ def main():
             if key != 'company_name':
                 print(f"{key.replace('_', ' ').title()}: {value}")
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
     main()

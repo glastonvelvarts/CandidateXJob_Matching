@@ -46,7 +46,8 @@ def extract_projects_from_resume(cleaned_data):
         return []
     
     # Combine all project-related text
-    projects_text = "\n".join(raw_projects)
+    projects_text = "\n".join(map(str, raw_projects))
+
     
     try:
         # Use the newer pattern (prompt | llm) instead of deprecated LLMChain
@@ -106,6 +107,8 @@ async def main():
 
 # Run the async function
 asyncio.run(main())
+
+
 
 # import asyncio
 # import requests

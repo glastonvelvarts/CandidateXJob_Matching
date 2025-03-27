@@ -164,85 +164,161 @@ def clean_employment_history(employment_positions):
                 "location": pos.get("Employer", {}).get("Location", {}).get("Municipality", ""),
             })
     return cleaned_history
+import json
+import re
+
+import json
+import re
 
 async def extract_projects_from_resume_parse(resume_parse_data, conversation, resume_text, dev_project_details):
     projects = []
-    
-    # 1. First, check devProjectDetails
-    if dev_project_details and isinstance(dev_project_details, list):
-        projects.extend(dev_project_details)
-    
-    # 2. Extract projects from parsed data
+
+    # Fetch data from database safely
+    try:
+        data = resume_collection.find_one() or {}
+        dev_project_details = data.get("devProjectDetails", [])
+        resume_parse_data = data.get("resumeParseData", {})
+    except Exception as e:
+        print(f"Error fetching data from database: {e}")
+        dev_project_details = []
+
+    # 1. Prioritize devProjectDetails
+    if dev_project_details:
+        return [
+            {
+                "project_name": project.get("name", ""),
+                "tools_used/skill_used": project.get("techStack/tools", []),
+                "Soft_skills": project.get("Soft_skills", []),
+                "description": project.get("description", "")
+            }
+            for project in dev_project_details
+        ]
+
+    # 2. Extract projects from parsed resume data
+    parsed_data = {}
     if isinstance(resume_parse_data, str):
         try:
             parsed_data = json.loads(resume_parse_data)
-            # Check if there's a Projects section in parsed data
-            parsed_projects = parsed_data.get("Projects", [])
-            if parsed_projects:
-                projects.extend(parsed_projects)
-            
-            # If no dedicated Projects section, check Employment History
-            employment_history = parsed_data.get("EmploymentHistory", {}).get("Positions", [])
-            for job in employment_history:
-                description = job.get("Description", "")
-                if any(keyword in description.lower() for keyword in ["project", "developed", "created", "implemented"]):
-                    projects.append({
-                        "name": "",
-                        "description": description,
-                        "techStack": [],
-                        "tools": [],
-                        "duration": ""
-                    })
-        except json.JSONDecodeError as e:
-            print(f"Error decoding resumeParseData for project extraction: {e}")
+        except json.JSONDecodeError:
+            print("Error decoding resumeParseData for project extraction.")
+    elif isinstance(resume_parse_data, dict):
+        parsed_data = resume_parse_data
+
+    if parsed_data:
+        parsed_projects = parsed_data.get("Projects", [])
+        if parsed_projects:
+            return await process_projects(parsed_projects, conversation)
+
+        # 3. If no projects, check EmploymentHistory
+        employment_history = parsed_data.get("EmploymentHistory", {}).get("Positions", [])
+        employment_projects = await extract_projects_from_employment(conversation, employment_history)
+        projects.extend(employment_projects)
     
-    # 3. If still no projects found, use LLM to extract more
+    # 4. If no projects found, use LLM extraction from resume text
     if not projects:
-        project_prompt = """
-        From the given resume text, carefully extract project details:
-        - For each project, identify:
-          1. Project Name
-          2. Project Description
-          3. Technologies/Tech Stack Used IF MENTIONED OTHERWISE use Project Description to extract them
-          4. Tools Used IF MENTIONED OTHERWISE use Project Description to extract them
-          5. Project Duration (approximate)
+        projects = await extract_projects_from_resume_text(conversation, resume_text)
 
-        Output Format (as JSON):
-        [
-          {
-            "name": "Project Name",
-            "description": "Detailed Project Description",
-            "techStack": ["Technology1", "Technology2"],
-            "tools": ["Tool1", "Tool2"],
-            "duration": "e.g., 3 months, Summer 2022"
-          }
-        ]
-
-        Resume Text:
-        """ + resume_text
-
-        try:
-            response = conversation.run(project_prompt)
-            
-            try:
-                parsed_projects = json.loads(response)
-                
-                for project in parsed_projects:
-                    projects.append({
-                        "name": project.get("name", ""),
-                        "description": project.get("description", ""),
-                        "techStack": project.get("techStack", []),
-                        "tools": project.get("tools", []),
-                        "duration": project.get("duration", "")
-                    })
-            
-            except (json.JSONDecodeError, TypeError):
-                print("Could not parse project details from LLM response")
-        
-        except Exception as e:
-            print(f"Error extracting project details: {e}")
-    
     return projects
+
+async def process_projects(parsed_projects, conversation):
+    projects = []
+    for project in parsed_projects:
+        description = project.get("description", "")
+        tools_used = project.get("tools_used/skill_used", [])
+        soft_skills = project.get("Soft_skills", [])
+        
+        project_name = project.get("project_name", "")
+        if isinstance(project_name, dict):
+            project_name = project_name.get("Normalized", project_name.get("Raw", ""))
+
+        # Remove unwanted fields like "Raw", "Normalized", "Probability"
+        if isinstance(project_name, dict):
+            project_name = project_name.get("Normalized", "")
+
+        # Use LLM if details are missing
+        if not tools_used or not soft_skills:
+            extracted_data = await run_llm_extraction(conversation, description)
+            tools_used = extracted_data.get("tools_used/skill_used", tools_used)
+            soft_skills = extracted_data.get("Soft_skills", soft_skills)
+
+        projects.append({
+            "project_name": project_name,
+            "tools_used/skill_used": tools_used,
+            "Soft_skills": soft_skills,
+            "description": description
+        })
+    return projects
+
+async def extract_projects_from_employment(conversation, employment_history):
+    projects = []
+    for job in employment_history:
+        job_title = job.get("JobTitle", "")
+        description = job.get("Description", "")
+        if description:
+            extracted_data = await run_llm_extraction(conversation, description)
+            projects.append({
+                "project_name": job_title,
+                "tools_used/skill_used": extracted_data.get("tools_used/skill_used", []),
+                "Soft_skills": extracted_data.get("Soft_skills", []),
+                "description": description
+            })
+    return projects
+
+async def extract_projects_from_resume_text(conversation, resume_text):
+    project_prompt = """
+    Extract structured details from the given resume text.
+    For each role, the "project_name" should be the job designation or appropriate role based on the description.
+    Identify both technical tools used AND other skills demonstrated (e.g., leadership, collaboration, problem-solving, communication).
+
+    Format the output in valid JSON with the following structure:
+
+    [
+        {
+            "project_name": "<Job Designation>",
+            "tools_used/skill_used": ["<Tool 1>", "<Tool 2>", ...],
+            "Soft_skills": ["<Soft Skill 1>", "<Soft Skill 2>", ...],
+            "description": "<Brief description of the role>"
+        }
+    ]
+
+    Resume Text:
+    {resume_text} 
+
+    Return ONLY a valid JSON array. If no roles can be identified, return an empty JSON array:
+    []
+    """
+    return await run_llm_json_extraction(conversation, project_prompt)
+
+async def run_llm_extraction(conversation, description):
+    prompt = f"""
+    Extract the following details from the given description:
+    - List of tools/technologies used
+    - List of soft skills demonstrated
+    
+    Description:
+    {description}
+
+    Output in JSON:
+    {{
+      "tools_used/skill_used": ["Technology1", "Technology2"],
+      "Soft_skills": ["Skill1", "Skill2"]
+    }}
+    """
+    return await run_llm_json_extraction(conversation, prompt)
+
+async def run_llm_json_extraction(conversation, prompt):
+    try:
+        response = conversation.run(prompt).strip()
+        response = re.sub(r"^```(?:json)?\n|\n```$", "", response, flags=re.MULTILINE)
+        extracted_data = json.loads(response) if response.startswith("{") or response.startswith("[") else []
+        return extracted_data
+    except (json.JSONDecodeError, TypeError):
+        print("Error parsing JSON from LLM response.")
+    except Exception as e:
+        print(f"LLM extraction error: {e}")
+    return []
+
+
 
 def extract_skills_from_resume_parse(resume_parse_data):
     skills = set()
@@ -301,7 +377,9 @@ async def process_single_resume():
         resume_text, 
         conversation
     )
-    
+    #work preference
+    work_preference=data.get("jobPreference","")
+    work_experience = data.get("devTotalExperience", "")
     # Use the updated project extraction with conversation
     projects = await extract_projects_from_resume_parse(
         resume_text, 
@@ -325,8 +403,10 @@ async def process_single_resume():
         "LinkedIn Profile": linkedin,
         "GitHub Profile": github,
         "Portfolio Website": portfolio,
+        "Work Experience": work_experience,
         "Education": education,
         "Employment History": employment_history,
+        "Work Preference": work_preference,
         "Skills": all_skills,
         "Languages Known": all_languages,
         "Projects": projects

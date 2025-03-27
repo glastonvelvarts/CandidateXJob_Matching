@@ -127,5 +127,6 @@ def main():
             if key not in ['company_name', 'error']:
                 print(f"{key.replace('_', ' ').title()}: {json.dumps(value, indent=2)}")
 
+
 if __name__ == "__main__": 
     main()

@@ -2,3 +2,6 @@ __pycache__/
 downloads/
 uploads/
 .env
+Resume_parsed.json
+cleaned_resume.json
+company_details.json

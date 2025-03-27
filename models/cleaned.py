@@ -8,7 +8,7 @@ from pymongo import MongoClient
 import asyncio
 import time
 import json
-
+import re
 load_dotenv()
 
 # Set up Gemini API key and model
@@ -50,85 +50,102 @@ async def fill_missing_details(field_name, existing_value, resume_text):
     except Exception as e:
         print(f"Error fetching {field_name}: {e}")
         return None
-
+    
 async def clean_education_history(education_details, resume_text, conversation):
     cleaned_education = []
+    data = resume_collection.find_one()
+    if not data:
+        print("No resume found.")
+        return []
+
+    # Convert parsed JSON to a readable string
+    resume_text = json.dumps(json.loads(data.get("resumeParseData", "{}")), indent=2)
     
-    # First, check devAcademic for basic degree information
+    # Initial population from existing education details
+    existing_education = {}
     if education_details and isinstance(education_details, list):
         for edu in education_details:
-            # Prepare initial entry with degree from devAcademic
-            current_edu = {
-                "degree": edu.get("specialization", ""),
+            key = (edu.get("institution", "").lower(), edu.get("degree", "").lower())
+            existing_education[key] = {
+                "degree": edu.get("degree", edu.get("specialization", "")),
                 "institution": edu.get("institution", ""),
-                "specialization": "",  # We'll try to fill this
-                "year": "",
+                "specialization": edu.get("specialization", ""),
+                "year": edu.get("year", "")
             }
-            cleaned_education.append(current_edu)
 
-    # Use LLM to extract more detailed education information
-    prompt = """
-    From the given resume text, carefully extract detailed educational information:
-    - For each educational entry, identify:
-      1. Full Degree Name (e.g., Master of Science, Bachelor of Science)
-      2. Specific Specialization/Major (e.g., Computer Science, Geology, Engineering)
-      3. Institution Name
-      4. Graduation Year or Study Period
+    # LLM-based comprehensive data extraction and filling
+    prompt = f"""
+    Thoroughly analyze the resume text and extract comprehensive educational information.
+    Your goal is to fill in ALL missing or incomplete details about education.
+    
+    Current Known Education Details:
+    {list(existing_education.values())}
 
-    Provide the most comprehensive and accurate details possible. 
-    If multiple degrees are found, list all.
+    Comprehensive Extraction Requirements:
+    - Extract EVERY possible detail about education
+    - Fill in missing fields from the resume text
+    - Prioritize completeness and accuracy
+    - If multiple interpretations exist, choose the most likely one
+    - Include any additional context that might help understand the education background
 
-    Output Format (as JSON):
+    Output Format (Strict JSON):
     [
-      {
-        "degree": "Full Degree Name",
-        "specialization": "Specific Field of Study",
-        "institution": "University Name",
-        "year": "Graduation Year"
-      }
+      {{
+        "degree": "Degree Name (MUST be filled)",
+        "specialization": "Specific Field of Study (MUST be filled)",
+        "institution": "Full University/College Name (MUST be filled)",
+        "year": "Graduation Year or Study Period (MUST be filled)"
+      }}
     ]
 
+    IMPORTANT: Ensure NO empty fields. If unsure, use best guess or contextual inference.
+
     Resume Text:
-    """ + resume_text
+    {resume_text}
+    """
 
     try:
-        # If no previous education details, start with an empty list
-        if not cleaned_education:
-            cleaned_education = []
-
-        # Run LLM extraction
         response = conversation.run(prompt)
-        
-        # Try to parse the response as JSON
-        try:
-            parsed_education = json.loads(response)
-            
-            # Merge or add new education details
-            for edu in parsed_education:
-                # Check if this entry already exists
-                existing_entry = next((item for item in cleaned_education 
-                                       if item['institution'] == edu.get('institution')), None)
-                
-                if existing_entry:
-                    # Update existing entry with more detailed information
-                    existing_entry['specialization'] = edu.get('specialization', existing_entry.get('specialization', ''))
-                    existing_entry['degree'] = edu.get('degree', existing_entry.get('degree', ''))
-                    existing_entry['year'] = edu.get('year', existing_entry.get('year', ''))
-                else:
-                    # Add new entry
-                    cleaned_education.append({
-                        "specialization": edu.get('specialization', ''),
-                        "institution": edu.get('institution', ''),
-                        "degree": edu.get('degree', ''),
-                        "year": edu.get('year', '')
-                    })
-        
-        except (json.JSONDecodeError, TypeError):
-            print("Could not parse education details from LLM response")
-    
+        response = response.strip("`")
+        response = re.sub(r"^```(?:json)?\n|\n```$", "", response.strip(), flags=re.MULTILINE)
+
+        # Ensure valid JSON structure
+        response = response.lstrip()
+        if not response.startswith("[") and not response.startswith("{"):
+            response = response.split("\n", 1)[-1]  # Remove first invalid line
+
+        parsed_education = json.loads(response)
+
+        # Merge and update education entries
+        for new_edu in parsed_education:
+            key = (new_edu.get("institution", "").lower(), new_edu.get("degree", "").lower())
+
+            if key in existing_education:
+                # Update existing entry with more comprehensive information
+                for field in ["degree", "specialization", "institution", "year"]:
+                    if new_edu.get(field):
+                        existing_education[key][field] = new_edu[field]
+            else:
+                # Add new entry if not already present
+                existing_education[key] = {
+                    "degree": new_edu.get("degree", ""),
+                    "specialization": new_edu.get("specialization", ""),
+                    "institution": new_edu.get("institution", ""),
+                    "year": new_edu.get("year", "")
+                }
+
+    except (json.JSONDecodeError, TypeError) as parse_error:
+        print(f"JSON Parsing Error: {parse_error}")
+        print(f"Raw LLM Response: {response}")
     except Exception as e:
-        print(f"Error extracting education details: {e}")
-    
+        print(f"Error in education extraction: {e}")
+
+    # Final cleanup: remove empty entries
+    cleaned_education = [
+        edu for edu in existing_education.values()
+        if all(edu.values())  # Ensures all fields are filled
+    ]
+
     return cleaned_education
 
 def clean_employment_history(employment_positions):
@@ -148,15 +165,24 @@ def clean_employment_history(employment_positions):
             })
     return cleaned_history
 
-async def extract_projects_from_resume_parse(resume_parse_data, conversation, resume_text):
+async def extract_projects_from_resume_parse(resume_parse_data, conversation, resume_text, dev_project_details):
     projects = []
     
-    # First, extract projects from parsed data
+    # 1. First, check devProjectDetails
+    if dev_project_details and isinstance(dev_project_details, list):
+        projects.extend(dev_project_details)
+    
+    # 2. Extract projects from parsed data
     if isinstance(resume_parse_data, str):
         try:
             parsed_data = json.loads(resume_parse_data)
-            employment_history = parsed_data.get("EmploymentHistory", {}).get("Positions", [])
+            # Check if there's a Projects section in parsed data
+            parsed_projects = parsed_data.get("Projects", [])
+            if parsed_projects:
+                projects.extend(parsed_projects)
             
+            # If no dedicated Projects section, check Employment History
+            employment_history = parsed_data.get("EmploymentHistory", {}).get("Positions", [])
             for job in employment_history:
                 description = job.get("Description", "")
                 if any(keyword in description.lower() for keyword in ["project", "developed", "created", "implemented"]):
@@ -170,7 +196,7 @@ async def extract_projects_from_resume_parse(resume_parse_data, conversation, re
         except json.JSONDecodeError as e:
             print(f"Error decoding resumeParseData for project extraction: {e}")
     
-    # If no projects found in parsed data, use LLM to extract more
+    # 3. If still no projects found, use LLM to extract more
     if not projects:
         project_prompt = """
         From the given resume text, carefully extract project details:
@@ -217,25 +243,6 @@ async def extract_projects_from_resume_parse(resume_parse_data, conversation, re
             print(f"Error extracting project details: {e}")
     
     return projects
-
-def extract_project_details(devProjectDetails, resumeParseData, employmentDetails, llm):
-    projects = set()
-    
-    # 1. Check if user has added projects in devProjectDetails
-    if devProjectDetails:
-        projects.update(devProjectDetails)
-    
-    # 2. Check if resumeParseData contains a 'Projects' section
-    if resumeParseData.get("Projects"):
-        projects.update(resumeParseData["Projects"])
-    
-    # 3. If no projects found, extract from employmentDetails using LLM
-    if not projects and employmentDetails:
-        extracted_projects = llm.extract_projects_from_employment(employmentDetails) or []
-        projects.update(extracted_projects)
-    
-    return list(projects)
-
 
 def extract_skills_from_resume_parse(resume_parse_data):
     skills = set()
@@ -296,21 +303,12 @@ async def process_single_resume():
     )
     
     # Use the updated project extraction with conversation
-    projects = await extract_projects_from_resume_parse(resume_text, conversation, resume_text)
-    dev_projects = data.get("devProjects", [])
-
-    # Merge projects, avoiding duplicates
-    if dev_projects:
-        # Convert both lists to sets of tuples for comparison
-        project_set = set(tuple(proj.items()) for proj in projects)
-        
-        for dev_proj in dev_projects:
-            # Convert dev project to a tuple for comparison
-            dev_proj_tuple = tuple(dev_proj.items())
-            
-            # Add only if not already in existing projects
-            if dev_proj_tuple not in project_set:
-                projects.append(dev_proj)
+    projects = await extract_projects_from_resume_parse(
+        resume_text, 
+        conversation, 
+        resume_text, 
+        data.get("devProjects", [])
+    )
 
     # Try to get current job title from resume if not provided
     if not job_title:
@@ -335,15 +333,18 @@ async def process_single_resume():
     }
     return cleaned_data
 
+
 async def main():
     print("Processing resumes...")
     start_time = time.time()
     cleaned_data = await process_single_resume()
 
+
     if cleaned_data:
         # Save to JSON file
         with open("cleaned_resume.json", "w") as f:
             json.dump(cleaned_data, f, indent=4)
+
 
         # Optional: Save to MongoDB
         # cleaned_collection.insert_one(cleaned_data)

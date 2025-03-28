@@ -1,55 +1,73 @@
-# import datetime
+from cleaned import process_single_resume
+import json
+import re
+import datetime
+import asyncio
+from langchain_google_genai import GoogleGenerativeAI
+from langchain.chains import LLMChain
+from langchain.memory import ConversationBufferMemory
+from langchain.prompts import PromptTemplate
 
-# from cleaned import employment_history  # Assuming employment_history is a list of dicts with 'from' and 'to' dates
+import os
+from dotenv import load_dotenv
 
-# def calculate_stability(job_durations):
-#     """
-#     Calculate the stability of a person based on their job durations.
+# Load environment variables
+load_dotenv()
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL")
 
-#     Parameters:
-#     job_durations (list of int): List of job durations in months.
+# Load the resume data
+resume_data = asyncio.run(process_single_resume())
 
-#     Returns:
-#     float: Stability score (higher means more stable).
-#     """
-#     if not job_durations:
-#         return 0.0
+# Safely extract employment history
+employment_history = resume_data.get("Employment History", [])
+if employment_history:
+    company_names = [entry.get("company") for entry in employment_history]
 
-#     total_duration = sum(job_durations)
-#     num_jobs = len(job_durations)
-#     average_duration = total_duration / num_jobs
+    from_dates = []
+    to_dates = []
 
-#     # Stability score is the average duration of jobs
-#     stability_score = average_duration
+    for entry in employment_history:
+        try:
+            from_date = datetime.datetime.strptime(entry.get("from"), "%Y-%m-%d")
+            from_dates.append(from_date)
+        except (TypeError, ValueError):
+            from_dates.append(None)
 
-#     return stability_score
+        to_date_raw = entry.get("to")
+        if to_date_raw == "Present":  # Handle 'Present'
+            to_dates.append(datetime.datetime.now())  # Set 'Present' to current date
+        else:
+            try:
+                to_date = datetime.datetime.strptime(to_date_raw, "%Y-%m-%d")
+                to_dates.append(to_date)
+            except (TypeError, ValueError):
+                to_dates.append(None)
 
-# def calculate_job_durations(employment_history):
-#     """
-#     Calculate job durations from employment history.
+    # Calculate differences (stability in months)
+    stability = [
+        (to_date - from_date).days // 30 if from_date and to_date else None
+        for from_date, to_date in zip(from_dates, to_dates)
+    ]
 
-#     Parameters:
-#     employment_history (list of dict): List of employment history with 'from' and 'to' dates.
+    # Prepare readable summary for analysis
+    employment_summary = "\n".join([
+        f"{company}: {months} months – {'Long tenure' if months >= 36 else 'Moderate tenure' if months >= 24 else 'Short tenure'}"
+        for company, months in zip(company_names, stability) if months is not None
+    ])
 
-#     Returns:
-#     list of int: List of job durations in months.
-#     """
-#     job_durations = []
-#     for job in employment_history:
-#         from_date = datetime.datetime.strptime(job['from'], '%Y-%m-%d')
-#         to_date = datetime.datetime.strptime(job['to'], '%Y-%m-%d')
-#         duration = (to_date - from_date).days // 30  # Convert days to months
-#         job_durations.append(duration)
-#     return job_durations
+    # Feed data to LangChain for professional analysis
+    llm = GoogleGenerativeAI(model=GEMINI_MODEL, google_api_key=GEMINI_API_KEY)
+    prompt_template = PromptTemplate(
+        input_variables=["employment_summary"],
+        template=("Here is the employment summary: {employment_summary}. "
+                  "Based on this data, please provide a professional analysis of job stability in line with company standards.")
+    )
+    chain = LLMChain(llm=llm, memory=ConversationBufferMemory(), prompt=prompt_template)
 
-# # Example usage
-# employment_history = [
-#     {'from': '2018-01-01', 'to': '2020-01-01'},
-#     {'from': '2020-02-01', 'to': '2021-02-01'},
-#     {'from': '2021-03-01', 'to': '2022-03-01'},
-#     # Add more employment history as needed
-# ]
-
-# job_durations = calculate_job_durations(employment_history)
-# stability_score = calculate_stability(job_durations)
-# print(f"Stability Score: {stability_score}")
+    # Run the analysis
+    analysis = chain.run({"employment_summary": employment_summary})
+    print("Analysis:")
+    print(analysis)
+else:
+    print("No Employment History found.")

@@ -164,11 +164,6 @@ def clean_employment_history(employment_positions):
                 "location": pos.get("Employer", {}).get("Location", {}).get("Municipality", ""),
             })
     return cleaned_history
-import json
-import re
-
-import json
-import re
 
 async def extract_projects_from_resume_parse(resume_parse_data, conversation, resume_text, dev_project_details):
     projects = []
@@ -318,8 +313,6 @@ async def run_llm_json_extraction(conversation, prompt):
         print(f"LLM extraction error: {e}")
     return []
 
-
-
 def extract_skills_from_resume_parse(resume_parse_data):
     skills = set()
     if isinstance(resume_parse_data, str):
@@ -345,7 +338,6 @@ async def process_single_resume():
     if not data:
         print("No resume found.")
         return
-
     resume_text = data.get("resumeParseData", "")
     resume_parse_data = json.loads(resume_text) if isinstance(resume_text, str) else {}
     contact_info = resume_parse_data.get("ContactInformation", {})
